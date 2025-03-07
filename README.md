@@ -19,8 +19,11 @@ https://github.com/thheller/shadow-cljs
 # Start Example
 
 ```bash
+cd 01-quil
 npx shadow-cljs watch app
 ```
+
+![](quil.png)
 
 # React Native (with ChatGPT)
 
