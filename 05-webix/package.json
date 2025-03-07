@@ -1,0 +1,16 @@
+{
+  "name": "pyjama-rts",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "shadow-cljs": "2.28.21"
+  },
+  "dependencies": {
+    "@techstark/opencv-js": "^4.10.0-release.1",
+    "p5": "^1.11.3",
+    "pixi.js": "^8.8.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "webix": "^11.0.0"
+  }
+}

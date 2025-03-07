@@ -1,0 +1,16 @@
+{:source-paths ["src"]
+ :dependencies
+ [
+  [reagent/reagent "1.3.0"]
+  ]
+ :dev-http     {8001 "public"}
+ :builds
+ {:app
+  {:target     :browser
+   :output-dir "public/js"
+   :asset-path "/js"
+   :npm-deps   {react     "18.3.1-1"
+                react-dom "18.3.1-1"}
+   :modules    {:main {;:entries [react.path-drawing]
+                       :init-fn abstract-art.core/init
+                       }}}}}
