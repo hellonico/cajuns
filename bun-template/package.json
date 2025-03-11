@@ -1,0 +1,17 @@
+{
+  "name": "tunejs",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "chokidar": "^4.0.3",
+    "cljs": "^1.2.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "shadow-cljs": "^2.28.21"
+  }
+}
