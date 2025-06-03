@@ -9,9 +9,7 @@
   {:target     :browser
    :output-dir "public/js"
    :asset-path "/js"
-   :npm-deps   {react     "18.3.1-1"
-                react-dom "18.3.1-1"}
-   ;:js-options {:resolve {"react" {:global "React"}
-   ;                       "react-dom" {:global "ReactDOM"}}}
+   :npm-deps   {react     "18.3.1"
+                react-dom "18.3.1"}
    :compiler-options {:external-config {:react {:development true}}}
    :modules    {:main {:entries [abstract-art.core] :init-fn abstract-art.core/init}}}}}

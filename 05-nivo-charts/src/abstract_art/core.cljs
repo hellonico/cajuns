@@ -9,4 +9,9 @@
 
 ;; Mount the UI
 (defn ^:export init []
-  (radar.e01/init))
+  (radar.e01/init)
+  ;(bar.e01/init)
+  ;(bar.e02/init)
+  ;(circlepacking.e01/init)
+  ;(chord.e01/init)
+  )

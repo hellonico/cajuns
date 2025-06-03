@@ -1,5 +1,7 @@
 {:source-paths ["src"]
- :dependencies []
+ :dependencies [
+                ;[org.clojure/clojurescript "1.12.42"]
+                ]
  :dev-http     {8001 "public"}
  :builds
  {:app

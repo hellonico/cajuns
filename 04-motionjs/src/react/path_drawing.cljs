@@ -92,7 +92,7 @@
                     :custom   5
                     :variants draw
                     :style    shape-style}]])
-;
-;(defn app []
-;  [:div
-;   [PathDrawing]])
+
+(defn app []
+  [:div
+   [PathDrawing]])

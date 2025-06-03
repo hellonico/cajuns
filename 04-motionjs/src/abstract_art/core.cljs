@@ -1,6 +1,7 @@
 (ns abstract-art.core
   (:require
     [js.core]
+    [react.path-drawing]
     [reagent.dom :as rd]))
 ;
 ;(defn app []
@@ -8,7 +9,10 @@
 ;   [js.core/animated-box]])
 
 (defn ^:export init []
-  (rd/render [js.core/animated-box] (js/document.getElementById "app")))
+  (rd/render
+     [js.core/animated-box]
+    ;[react.path-drawing/app]
+    (js/document.getElementById "app")))
 
 (comment
 

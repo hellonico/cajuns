@@ -1,12 +1,8 @@
 (ns abstract-art.core
-  (:require
-   [reagent.core :as reagent]
-    [reagent.dom :as rd]
-    [ajax.core :refer [GET POST]]
-    ;[cljs-ajax.core :refer [GET]]
-    [clojure.string :as str]
-    ;[clojure.data.csv :as csv]
-    ))
+ (:require
+  [reagent.core :as reagent]
+  [reagent.dom :as rd]
+  [ajax.core :refer [GET POST]]))
 
 ;; Atom to hold the players' data
 (defonce players (reagent/atom []))
@@ -14,15 +10,15 @@
 ;; Function to parse CSV text using PapaParse
 (defn parse-csv [csv-text]
  (.parse js/Papa csv-text
-         (clj->js {:header true
+         (clj->js {:header         true
                    :skipEmptyLines true
-                   :complete (fn [result]
-                              (reset! players (js->clj (.-data result) :keywordize-keys true))) })))
+                   :complete       (fn [result]
+                                    (reset! players (js->clj (.-data result) :keywordize-keys true)))})))
 
 ;; Fetch CSV file and parse it
-(defn fetch-players []
- (GET "players.csv"
-      {:handler parse-csv
+(defn fetch-players [url]
+ (GET url
+      {:handler       parse-csv
        :error-handler #(js/console.error "Failed to load CSV" %)}))
 
 ;; UI for displaying a player card
@@ -42,8 +38,8 @@
     [:div [player-card player]])]])
 
 (defn mount-root []
-  (rd/render [player-cards] (.getElementById js/document "app")))
+ (rd/render [player-cards] (.getElementById js/document "app")))
 
 (defn ^:export init []
-  (fetch-players)
-  (mount-root))
+ (fetch-players "players.csv")
+ (mount-root))

@@ -28,3 +28,15 @@ npx shadow-cljs watch app
 # React Native (with ChatGPT)
 
 https://chatgpt.com/share/67c8237d-e074-800e-8bde-d04af068deed
+
+# REPL
+
+```bash
+npx shadow-cljs cljs-repl :app
+rlwrap  --always-readline --no-children npx shadow-cljs cljs-repl :app 
+```
+
+```
+(js/alert "Hello from Repl")
+
+```

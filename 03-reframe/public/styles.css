@@ -1,0 +1,288 @@
+/*-------------------------------------------------------------------------------
+  Light “Elegant Blue” CSS for Todo App (v6)
+  - Fonts: Cinzel (headings) & Lato (body)
+  - White background, dark text
+  - Accent colors: deep blue & light blue
+  - Styled Add/Delete buttons, smooth animations
+  - Slower fade-in on add (1.2s), fade-out on delete (0.6s), animated complete
+-------------------------------------------------------------------------------*/
+
+/* 1) Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap");
+
+/*-------------------------------------------------------------------------------
+  2) Global Styles
+-------------------------------------------------------------------------------*/
+html,
+body {
+  background-color: #ffffff;
+  color: #222222;
+  margin: 0;
+  padding: 0;
+  font-family: "Lato", sans-serif;
+  line-height: 1.6;
+}
+
+*:focus {
+  outline: none;
+}
+
+/*-------------------------------------------------------------------------------
+  3) App Container
+-------------------------------------------------------------------------------*/
+#app {
+  max-width: 600px;
+  margin: 2.5rem auto;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 2.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/*-------------------------------------------------------------------------------
+  4) Heading
+-------------------------------------------------------------------------------*/
+#app h2 {
+  font-family: "Cinzel", serif;
+  font-size: 2.5rem;
+  color: #1e3a8a; /* deep blue */
+  text-align: center;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+}
+
+/*-------------------------------------------------------------------------------
+  5) Input Field & “Add” Button
+-------------------------------------------------------------------------------*/
+#app .input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+#app input[type="text"] {
+  flex: 1;
+  padding: 0.9rem 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fafafa;
+  color: #222222;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+#app input[type="text"]::placeholder {
+  color: #999999;
+}
+
+#app input[type="text"]:focus {
+  border-color: #3b82f6; /* light blue */
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+}
+
+#app button.add-btn {
+  padding: 0.9rem 1.5rem;
+  margin-left: 1rem;
+  background-color: #1e3a8a; /* deep blue */
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-family: "Lato", sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.4s ease, box-shadow 0.4s ease, transform 0.2s ease;
+}
+
+#app button.add-btn:hover {
+  background-color: #3b82f6; /* light blue */
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+}
+
+#app button.add-btn:active {
+  transform: scale(0.97);
+}
+
+/*-------------------------------------------------------------------------------
+  6) Todo List Items & Animations
+-------------------------------------------------------------------------------*/
+#app ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#app li {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  margin-bottom: 1.25rem;
+  /* Padding: top/right/bottom/left. Extra right padding to accommodate delete button */
+  padding: 1rem 3.5rem 1rem 1.25rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    transform 0.4s ease,
+    opacity 0.6s ease,
+    height 0.6s ease,
+    margin-bottom 0.6s ease,
+    padding 0.6s ease;
+  animation: fadeIn 1.2s ease-out;
+  overflow: hidden;
+  position: relative;
+}
+
+#app li:hover {
+  background-color: #f9f9f9;
+  border-color: #d0d0d0;
+}
+
+/* Slower fade-in keyframes (1.2s) */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Todo text styling with smooth completion transition */
+#app li span {
+  flex: 1;
+  margin-left: 1rem;
+  font-size: 1rem;
+  transition: color 0.6s ease, transform 0.6s ease;
+  font-family: "Lato", sans-serif;
+}
+
+/*-------------------------------------------------------------------------------
+  7) Checkbox Styling & Complete Animation
+-------------------------------------------------------------------------------*/
+#app li input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #1e3a8a; /* deep blue */
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+#app li input[type="checkbox"]:hover {
+  transform: scale(1.1);
+}
+
+/* When checked: strike through, fade color, and slide text */
+#app li input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  color: #888888;
+  transform: translateX(5px);
+}
+
+/*-------------------------------------------------------------------------------
+  8) Delete Button Styling & Press Animation
+-------------------------------------------------------------------------------*/
+#app li button.delete-btn {
+  /* Fixed square dimensions */
+  width: 24px;
+  align-self: stretch; /* fill the li’s vertical space */
+  margin-left: auto;   /* push it to the far right */
+
+  /* Red square with white “×” */
+  background-color: #b00020;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+
+  /* Center the “×” inside */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Prevent shrinking */
+  flex-shrink: 0;
+
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.15s ease;
+}
+
+#app li button.delete-btn:hover {
+  background-color: #e53935; /* brighter red */
+}
+
+#app li button.delete-btn:active {
+  transform: scale(0.9);
+}
+
+/*-------------------------------------------------------------------------------
+  9) Fade-Out Animation for Delete
+-------------------------------------------------------------------------------*/
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    height: auto;
+    margin-bottom: 1.25rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  100% {
+    opacity: 0;
+    height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+#app li.removing {
+  animation: fadeOut 0.6s ease-out forwards;
+}
+
+/*-------------------------------------------------------------------------------
+  10) Print Styles (unchanged)
+-------------------------------------------------------------------------------*/
+@media print {
+  html,
+  body,
+  #app {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  input,
+  button {
+    display: none !important;
+  }
+
+  #app li {
+    background: #ffffff !important;
+    border: none !important;
+    margin-bottom: 0.5rem !important;
+    page-break-inside: avoid;
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  #app li input[type="checkbox"] {
+    display: inline-block !important;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+  }
+
+  #app h2 {
+    font-size: 1.75rem !important;
+  }
+
+  #app li span {
+    font-size: 1rem !important;
+  }
+}

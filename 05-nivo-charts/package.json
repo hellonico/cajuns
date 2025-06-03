@@ -3,14 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "shadow-cljs": "2.28.21"
+    "shadow-cljs": "3.1.5"
   },
   "dependencies": {
     "@nivo/bar": "^0.88.0",
     "@nivo/chord": "^0.88.0",
     "@nivo/circle-packing": "^0.88.0",
     "@nivo/radar": "^0.88.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }
