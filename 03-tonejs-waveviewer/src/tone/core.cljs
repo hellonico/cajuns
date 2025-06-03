@@ -6,5 +6,6 @@
 
 (defn ^:export init []
  (js/console.log "Initializing music player...")
- (tsc/play-sound)
+ ;(tsc/play-sound)
+ (tvc/play-sound)
  )

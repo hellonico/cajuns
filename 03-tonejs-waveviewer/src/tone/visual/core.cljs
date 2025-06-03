@@ -33,7 +33,7 @@
   ;; Start playback when WaveSurfer is ready
   (.on wavesurfer "ready" #(do
                             (js/console.log "Waveform loaded!")
-                            (.play my-sound)))) ;; Play the sound using Howler.js when WaveSurfer is ready
+                            (.play my-sound))) ;; Play the sound using Howler.js when WaveSurfer is ready
 
  ;; Pause both WaveSurfer and Howler when paused
  (.on my-sound "pause" #(do
@@ -43,7 +43,7 @@
  ;; Handle when WaveSurfer seeks manually
  (.on wavesurfer "seek" #(do
                           (js/console.log "WaveSurfer seeking:" %)
-                          (.seek my-sound (.-seek %))))) ;; Sync Howler's seek with WaveSurfer
+                          (.seek my-sound (.-seek %)))))) ;; Sync Howler's seek with WaveSurfer
 
 
 ;; Trigger play sound and waveform visualization

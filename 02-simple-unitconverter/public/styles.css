@@ -1,0 +1,150 @@
+/* === IMPORT A NICE SYSTEM FONT === */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* === RESET & BASE STYLES === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #fafafa;
+  color: #333333;
+  padding: 20px;
+}
+
+/* === TAB CONTAINER === */
+.tab-container {
+  width: 100%;
+  max-width: 100%;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Hide the actual radio inputs (they only control which tab is active) */
+.tab-container input[type="radio"] {
+  display: none;
+}
+
+/* === TAB LABELS ===
+   Treat each label as an inline-block that occupies exactly one-third of the width.
+   white-space: nowrap prevents them from wrapping. */
+.tab-label {
+  display: inline-block;
+  width: 30.3333%;
+  text-align: center;
+  padding: 12px 0;
+  background: #eeeeee;        /* light gray */
+  color: #555555;             /* dark gray text */
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: background 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Hover state for each tab */
+.tab-label:hover {
+  background: #e0e0e0;
+}
+
+/* === ACTIVE TAB STYLING ===
+   When the associated radio is checked, highlight its label. */
+#tab-length:checked + label[for="tab-length"],
+#tab-weight:checked + label[for="tab-weight"],
+#tab-temp:checked + label[for="tab-temp"] {
+  background: #ffffff;
+  color: #ff6c00;               /* coral-orange accent */
+  border-bottom: 3px solid #ff6c00;
+}
+
+/* === TAB CONTENT AREAS === */
+.tab-content {
+  display: none;
+  padding: 20px;
+  background: #ffffff;
+  animation: fadeInContent 0.2s ease-in-out;
+}
+
+/* Show content when its radio is checked */
+#tab-length:checked ~ #content-length   { display: block; }
+#tab-weight:checked ~ #content-weight   { display: block; }
+#tab-temp:checked   ~ #content-temp     { display: block; }
+
+/* Fade-in animation for content */
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* === FORM ROWS INSIDE TABS === */
+.form-row {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.form-row label {
+  width: 80px;
+  font-size: 1rem;
+  color: #444444;
+}
+
+.form-row input[type="number"],
+.form-row select {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background: #f9f9f9;
+  color: #111111;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-row input[type="number"]:focus,
+.form-row select:focus {
+  border-color: #ff6c00;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 108, 0, 0.2);
+}
+
+/* === RESULT ROW === */
+.result-row {
+  margin-top: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: right;
+  color: #333333;
+}
+
+/* Show an “=” sign before the result number */
+.result-row::before {
+  content: "=";
+  margin-right: 8px;
+  color: #888888;
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 600px) {
+  .tab-label {
+    font-size: 0.9rem;
+    padding: 10px 0;
+  }
+  .form-row label {
+    width: 70px;
+    font-size: 0.9rem;
+  }
+  .form-row input[type="number"],
+  .form-row select {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+  }
+  .result-row {
+    font-size: 1rem;
+  }
+}

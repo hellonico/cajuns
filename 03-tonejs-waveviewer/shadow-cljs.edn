@@ -3,9 +3,12 @@
                 ;[org.clojure/clojurescript "1.12.42"]
                 ]
  :dev-http     {8001 "public"}
+ :npm-deps {
+
+            }
  :builds
  {:app
   {:target     :browser
    :output-dir "public/js"
    :asset-path "/js"
-   :modules    {:main {:entries [tone.core tone.visual.core] :init-fn tone.core/init}}}}}
+   :modules    {:main {:entries [tone.core tone.visual.core tone.simple.core] :init-fn tone.core/init}}}}}

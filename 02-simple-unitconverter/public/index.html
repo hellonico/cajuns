@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Unit Converter</title>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<div class="tab-container">
+    <!-- RADIO BUTTONS (hidden) + LABELS as Tabs -->
+    <input type="radio" name="tabs" id="tab-length" checked/>
+    <label for="tab-length" class="tab-label">Length</label>
+
+    <input type="radio" name="tabs" id="tab-weight"/>
+    <label for="tab-weight" class="tab-label">Weight</label>
+
+    <input type="radio" name="tabs" id="tab-temp"/>
+    <label for="tab-temp" class="tab-label">Temperature</label>
+
+    <!-- CONTENT FOR LENGTH -->
+    <div class="tab-content" id="content-length">
+        <h2>Length Converter</h2>
+        <div class="form-row">
+            <label for="length-value">Value:</label>
+            <input type="number" id="length-value" placeholder="e.g. 5"/>
+        </div>
+        <div class="form-row">
+            <label for="length-from">From:</label>
+            <select id="length-from">
+                <option value="m">m</option>
+                <option value="km">km</option>
+                <option value="cm">cm</option>
+                <option value="mm">mm</option>
+                <option value="mi">mi</option>
+                <option value="yd">yd</option>
+                <option value="ft">ft</option>
+                <option value="in">in</option>
+                <option value="nm">nm</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="length-to">To:</label>
+            <select id="length-to">
+                <option value="m">m</option>
+                <option value="km">km</option>
+                <option value="cm">cm</option>
+                <option value="mm">mm</option>
+                <option value="mi">mi</option>
+                <option value="yd">yd</option>
+                <option value="ft">ft</option>
+                <option value="in">in</option>
+                <option value="nm">nm</option>
+            </select>
+        </div>
+        <div class="result-row">
+            = <span id="length-result">—</span>
+        </div>
+    </div>
+
+    <!-- CONTENT FOR WEIGHT -->
+    <div class="tab-content" id="content-weight">
+        <h2>Weight Converter</h2>
+        <div class="form-row">
+            <label for="weight-value">Value:</label>
+            <input type="number" id="weight-value" placeholder="e.g. 10"/>
+        </div>
+        <div class="form-row">
+            <label for="weight-from">From:</label>
+            <select id="weight-from">
+                <option value="kg">kg</option>
+                <option value="g">g</option>
+                <option value="mg">mg</option>
+                <option value="lb">lb</option>
+                <option value="oz">oz</option>
+                <option value="st">st</option>
+                <option value="t">t</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="weight-to">To:</label>
+            <select id="weight-to">
+                <option value="kg">kg</option>
+                <option value="g">g</option>
+                <option value="mg">mg</option>
+                <option value="lb">lb</option>
+                <option value="oz">oz</option>
+                <option value="st">st</option>
+                <option value="t">t</option>
+            </select>
+        </div>
+        <div class="result-row">
+            = <span id="weight-result">—</span>
+        </div>
+    </div>
+
+    <!-- CONTENT FOR TEMPERATURE -->
+    <div class="tab-content" id="content-temp">
+        <h2>Temperature Converter</h2>
+        <div class="form-row">
+            <label for="temp-value">Value:</label>
+            <input type="number" id="temp-value" placeholder="e.g. 100"/>
+        </div>
+        <div class="form-row">
+            <label for="temp-from">From:</label>
+            <select id="temp-from">
+                <option value="C">C</option>
+                <option value="F">F</option>
+                <option value="K">K</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="temp-to">To:</label>
+            <select id="temp-to">
+                <option value="C">C</option>
+                <option value="F">F</option>
+                <option value="K">K</option>
+            </select>
+        </div>
+        <div class="result-row">
+            <span id="temp-result"></span>
+        </div>
+    </div>
+</div>
+
+<!-- YOUR COMPILED CLOJURESCRIPT BUNDLE -->
+<script src="js/main.js"></script>
+</body>
+</html>
+
