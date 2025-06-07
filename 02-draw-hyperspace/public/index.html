@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Hyperspace Canvas (ClojureScript)</title>
+    <style>
+        /* Force html/body to fill the window without scrollbars */
+        html, body {
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background: #000;
+          width: 100%;
+          height: 100%;
+        }
+
+        /* Make the canvas always cover the full viewport */
+        #hyperspace-canvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          display: block;
+          background: #000;
+        }
+    </style>
+</head>
+<body>
+<canvas id="hyperspace-canvas"></canvas>
+<!-- Load the compiled ClojureScript bundle (hyperspace.js) -->
+<script src="hyperspace/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{:source-paths ["src"]
+ :builds
+ {:app
+  {:target :browser
+   :output-dir "public/hyperspace/js"
+   :asset-path "/hyperspace/js"
+   :modules {:main {:entries [hyperspace.core]}}
+   :devtools {:http-root "public"
+              :http-port 8021}}}}

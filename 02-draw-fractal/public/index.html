@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Galactic Canvas (ClojureScript)</title>
+    <style>
+        /* Make html/body fill the screen without scrollbars */
+        html, body {
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background: #000;
+          width: 100%;
+          height: 100%;
+        }
+
+        /* Position canvas fixed at top-left and force full viewport size */
+        #galaxy-canvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          display: block;
+          background: radial-gradient(circle at center, #02020a 0%, #000 80%);
+        }
+    </style>
+</head>
+<body>
+<canvas id="fractal-canvas"></canvas>
+<!-- Your compiled ClojureScript bundle (e.g. main.js) -->
+<script src="js/main.js"></script>
+</body>
+</html>
