@@ -1,4 +1,4 @@
-(ns galaxy.core
+(ns galaxy.e01
  (:require
   [goog.dom :as gdom]))
 
