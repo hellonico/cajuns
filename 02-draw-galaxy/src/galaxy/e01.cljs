@@ -15,7 +15,7 @@
 (defn init-canvas!
  "Grab the canvas element, set dimensions, get 2D context."
  []
- (let [canvas (gdom/getElement "galaxy-canvas")]
+ (let [canvas (gdom/getElement "canvas")]
   (reset! width (.-innerWidth js/window))
   (reset! height (.-innerHeight js/window))
   (set! (.-width canvas) @width)

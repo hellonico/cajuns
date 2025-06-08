@@ -11,7 +11,7 @@
 (defonce last-time (atom 0))
 
 ;; Configuration
-(def center-offset-x -60)  ;; shift system left by this pixels
+(def center-offset-x -220)  ;; shift system left by this pixels
 (def num-stars     800)
 (def num-clouds    30)
 (def star-colors   ["#ffffff" "#ffff66" "#aaaaaa"])
@@ -58,7 +58,7 @@
        ;; orbital radius of sun
        orb-r   30
        sx      (+ center-x (* orb-r (js/Math.cos @sun-angle)))
-       sy      (+ center-y (* orb-r (js/Math/sin @sun-angle)))
+       sy      (+ center-y (* orb-r (js/Math.sin @sun-angle)))
        ;; flicker range increased
        r0      (+ 15 (rand-range -3 3))
        grad    (.createRadialGradient ctx sx sy 0 sx sy r0)]
@@ -138,7 +138,7 @@
   :opacity (rand-range 0.1 0.25)
   ;; increase cloud drift speed
   :dx      (rand-range -0.01 0.01)  ;; reduced cloud drift speed
-  :dy      (rand-range -0.005 0.005)  ;; reduced cloud drift speed})
+  ;:dy      (rand-range -0.005 0.005)  ;; reduced cloud drift speed})
   :dy      (rand-range -0.002 0.002)})
 
 (defn update-cloud [c dt w h]
@@ -190,4 +190,4 @@
     (animate ctx w h 0)))))
 
 ;; Auto-start
-(init)
+;(init)
