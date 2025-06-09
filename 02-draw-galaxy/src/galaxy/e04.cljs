@@ -24,7 +24,7 @@
                 :sun-orbit     30
                 :sun-flicker   {:base 15 :range 3}
                 :sun-speed     0.00005
-                :planet-speed  0.000001
+                :planet-speed  0.0000005
                 :cloud-speed   {:x 0.01 :y 0.005}
                 :comet-speed   0.005
                 :show-rings    true
