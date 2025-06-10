@@ -8,9 +8,8 @@
 
 ;; --- State Atoms ---
 (defonce objects (atom []))
-;(defonce planets (atom []))
-;(defonce sun-angle (atom 0))
 (defonce last-time (atom 0))
+(defonce stats-visible? (atom false))
 
 ;; --- Settings ---
 (defonce settings
@@ -36,13 +35,38 @@
 
 (defn init-audio []
  (when (and audio-context (:audio @settings))
-  (let [audio (new js/Audio "/audio/inner-peace.mp3")]
+  (let [audio (new js/Audio (str "/audio/" (rand-nth ["inner-peace.mp3" "breath-of-life.mp3" "morning-in-the-forest.mp3" "perfect-beauty.mp3" "zen-garden.mp3"])))]
    (set! (.-loop audio) true)
    (.play audio)
    (reset! background-music audio))))
 
 ;; --- Utility ---
 (defn rand-range [min max] (+ min (* (rand) (- max min))))
+
+;; --- HUD Overlay ---
+(defn draw-stats [ctx w _h]
+ (when @stats-visible?
+  (let [padding 10
+        line-height 16
+        lines [(str "Objects: " (count @objects))
+               (str "FPS: " (int (/ 1000 (max 1 (- (.now js/Date) @last-time)))))]
+        box-width 160
+        box-height (* line-height (count lines))
+        right-x (- w box-width padding)
+        top-y padding]
+   ;; Reset transform to ensure drawing appears in screen space
+   (.setTransform ctx 1 0 0 1 0 0)
+   ;; Background box
+   (set! (.-globalAlpha ctx) 0.8)
+   (set! (.-fillStyle ctx) "white")
+   (.fillRect ctx right-x top-y box-width box-height)
+   ;; Text
+   (set! (.-globalAlpha ctx) 1)
+   (set! (.-font ctx) "14px monospace")
+   (set! (.-fillStyle ctx) "#00ffcc")
+   (doseq [[i line] (map-indexed vector lines)]
+    (.fillText ctx line (+ right-x 10) (+ top-y (* line-height (+ i 1))))))))
+
 
 ;; --- SceneObject Protocol ---
 (defprotocol SceneObject
@@ -179,12 +203,12 @@
 (defn create-overlay []
  (let [overlay (gdom/createElement "div")]
   (set! (.-id overlay) "settings-overlay")
-  (gstyle/setStyle overlay #js {:position "fixed" :top "50%" :left "50%"
-                                :transform "translate(-50%, -50%)"
+  (gstyle/setStyle overlay #js {:position   "fixed" :top "50%" :left "50%"
+                                :transform  "translate(-50%, -50%)"
                                 :background "rgba(0,0,0,0.8)" :color "#fff"
-                                :padding "20px" :borderRadius "10px"
+                                :padding    "20px" :borderRadius "10px"
                                 :fontFamily "Arial, sans-serif" :zIndex 9999 :display "none"
-                                :boxShadow "0 0 20px rgba(255,255,255,0.2)" :textAlign "center"})
+                                :boxShadow  "0 0 20px rgba(255,255,255,0.2)" :textAlign "center"})
   (doseq [[k v] @settings]
    (let [row (gdom/createElement "div")
          label (gdom/createElement "label")
@@ -255,10 +279,10 @@
                        (nth ["#88ccff" "#ffcc88" "#aacc88" "#cc88ff"] (mod i 4))
                        w h
                        (mapv (fn [j] {:orbit-radius (+ 12 (* j 5))
-                                      :angle (rand-range 0 (* 2 js/Math.PI))
-                                      :speed 0.0003
-                                      :size 2
-                                      :color "#dddddd"})
+                                      :angle        (rand-range 0 (* 2 js/Math.PI))
+                                      :speed        0.0003
+                                      :size         2
+                                      :color        "#dddddd"})
                              (range 1 3))
                        (rand-range -50 50) (rand-range -30 30)))
             (range (:num-planets @settings)))
@@ -275,12 +299,16 @@
                           (fn animate [t]
                            (let [dt (if (zero? @last-time) 0 (- t @last-time))]
                             (reset! last-time t)
+                            (draw-stats ctx w h)
+
                             (.clearRect ctx 0 0 w h)
                             (swap! objects (fn [objs] (mapv #(update-object % dt w h) objs)))
                             (doseq [obj @objects] (draw-object obj ctx)))
                            (.requestAnimationFrame js/window animate)))))
 
-(events/listen js/document "keydown"
-               (fn [e]
-                (when (= (.-key e) "m")
-                 (toggle-overlay))))
+(events/listen
+ js/document
+ "keydown"
+ (fn [e]
+  (when (= (.-key e) "m")
+   (toggle-overlay))))
