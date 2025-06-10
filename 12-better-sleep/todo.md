@@ -1,0 +1,3 @@
+-[ ] A live volume display?
+-[ ] A visual indicator for mood/sound changes?
+-[ ] Darker wave visuals or pulsing glow?
