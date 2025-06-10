@@ -189,7 +189,7 @@
 
 
 (defrecord Planet
- [orbit-radius angle speed size color w h moons offset-x offset-y opacity ring? ring-color]
+ [orbit-radius angle speed size color w h moons offset-x offset-y opacity ring? ring-count ring-speed ring-rotation tilt]
  SceneObject
  (update-object [this dt _ _]
   (let [new-angle (mod (+ angle (* speed dt)) (* 2 js/Math.PI))
@@ -225,12 +225,23 @@
 
    ;; Optional ring
    (when ring?
-    (set! (.-strokeStyle ctx) ring-color)
-    (set! (.-globalAlpha ctx) 0.4)
-    (set! (.-lineWidth ctx) 0.6)
-    (.beginPath ctx)
-    (.ellipse ctx x y (* size 2.5) (* size 1.3) 0 0 (* 2 js/Math.PI))
-    (.stroke ctx))
+    (assoc this :ring-rotation (mod (+ ring-rotation ring-speed) (* 2 js/Math.PI)))
+    (dotimes [i ring-count]
+     (let [rx (+ (* size 1.8) (* i 1.5)) ; wider per ring
+           ry (* rx 0.5)]
+      (.save ctx)
+      (.translate ctx x y)
+      (.rotate ctx tilt)             ;; 🌌 TILT preserved here
+      (.rotate ctx ring-rotation)   ;; 🌀 Ring's own rotation
+      (set! (.-strokeStyle ctx) "rgba(255,255,255,0.4)")
+      (set! (.-lineWidth ctx) 0.6)
+      (.beginPath ctx)
+      (.ellipse ctx 0 0 rx ry 0 0 (* 2 js/Math.PI))
+      (.stroke ctx)
+      (.restore ctx))))
+
+
+
 
    ;; Moons
    (doseq [{:keys [orbit-radius angle size color]} moons]
@@ -378,8 +389,10 @@
                         (rand-range -50 50)
                         (rand-range -30 30)
                         opacity
-                        ring?
-                        ring-color)))
+                        (zero? (rand-int 2))        ; ring?
+                        (rand-range (/ js/Math.PI 12) (/ js/Math.PI 4)) ; tilt
+                        ;ring-color
+                        )))
             (range (:num-planets @settings)))
 
 
