@@ -244,6 +244,14 @@
   (.resume audio-context)
   (init-audio))
 
+(defn fade-in-canvas! []
+      (when-let [c (.getElementById js/document "wave-canvas")]
+                (set! (.. c -style -opacity) "1")))
+
+(defn fade-out-canvas! []
+      (when-let [c (.getElementById js/document "wave-canvas")]
+                (set! (.. c -style -opacity) "0")))
+
 ;; ---- Wave Data & Visualization ----
 (defonce wave-data (atom (vec (repeat 120 0))))
 
@@ -405,8 +413,12 @@
                      (swap! app-state assoc :mood m)
                      (swap! app-state assoc :noise-type :white)
                      (swap! app-state assoc :page :app)
-                     (js/setTimeout apply-mood-and-noise 50)
-                     (js/setTimeout start-animation 100))
+                     (js/setTimeout
+                      (fn []
+                          (fade-in-canvas!)
+                          (apply-mood-and-noise)
+                          (start-animation))
+                      100))
 
                   }
          [:div {:style {:fontWeight 500 :fontSize "1.5rem"}} (:label params)]
@@ -422,28 +434,30 @@
                    :width "100vw"
                    :height "100vh"
                    :overflow "hidden"}}
-     [:canvas {:id     "wave-canvas"
-               :width  (.-innerWidth js/window)
+     [:canvas {:id "wave-canvas"
+               :width (.-innerWidth js/window)
                :height (.-innerHeight js/window)
-               :style  {:display "block"
-                        :position "absolute"
-                        :top "0"
-                        :left "0"
-                        :width "100%"
-                        :height "100%"}}]
+               :style {:display "block"
+                       :position "absolute"
+                       :top "0"
+                       :left "0"
+                       :width "100%"
+                       :height "100%"
+                       :opacity 0
+                       :transition "opacity 1.5s ease-in-out"}}]
      ;; Mood Label Overlay
      [:div {:style {:position "absolute"
                     :top "5vh"
                     :width "100%"
                     :textAlign "center"
                     :color "#fff"
-                    :fontFamily "'Nunito', sans-serif"
+                    ;:fontFamily "'Nunito', sans-serif"
                     :pointerEvents "none"}}
       [:div {:style {:fontSize "2.5rem"
                      :fontWeight "bold"
                      :textShadow (str "0 0 15px " color ", 0 0 30px " color)
                      :animation "pulseGlow 4s ease-in-out infinite"}}
-       (str (clojure.string/upper-case label))]
+       (str (clojure.string/lower-case label))]
 
       [:div {:style {:fontSize "1rem"
                      :marginTop "0.3rem"
@@ -481,11 +495,19 @@
        ;; Escape to stop audio
        (.addEventListener js/document "keydown"
                           (fn [e]
-                            (when (= (.-key e) "Escape")
-                              (stop-animation)
-                              (stop-audio)
-                              (reset! animating false)
-                              (swap! app-state assoc :page :menu))))
+                            (when (= (.-key e) " ")
+                              (fade-out-canvas!)
+                               (js/setTimeout
+                                (fn []
+                                 (stop-animation)
+                                 (stop-audio)
+                                 (reset! animating false)
+                                 (swap! app-state assoc :page :menu)
+                                 )
+                                1000))
+
+                              ;(swap! app-state assoc :page :menu)
+                              ))
 
        ;; Scroll to control volume
        (.addEventListener js/document "wheel"
