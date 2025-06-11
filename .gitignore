@@ -1,7 +1,7 @@
 /.idea/
-/.cpcache/
-/.shadow-cljs
-/node_modules
+.cpcache/
+.shadow-cljs
+node_modules
 /03-tonejs/03-tonejs.iml
 /03-tonejs/bun-template.iml
 /01-pong-game/public/js/cljs-runtime/
@@ -9,4 +9,10 @@
 /01-pong-game/public/js/manifest.edn
 /00-template/
 /02-simple-unitconverter/02-simple-unitconverter.iml
-/*.iml
+*.iml
+# ─ Ignore all files (recursively) under any public/js folder
+**/public/js/**
+
+# ─ But don’t ignore the folders themselves or our placeholder file
+!**/public/js/
+!**/public/js/.gitignore
