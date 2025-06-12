@@ -36,73 +36,16 @@
 
 (defn init-audio []
  (when (and audio-context (:audio @settings))
-  (let [audio (new js/Audio (str "/audio/" (rand-nth ["inner-peace.mp3" "breath-of-life.mp3" "morning-in-the-forest.mp3" "perfect-beauty.mp3" "zen-garden.mp3"])))]
+
+  (let [file (rand-nth ["inner-peace.mp3" "breath-of-life.mp3" "morning-in-the-forest.mp3" "perfect-beauty.mp3" "zen-garden.mp3"])
+        _ (println "playing audio:" file)
+        audio (new js/Audio (str "audio/" file ))]
    (set! (.-loop audio) true)
    (.play audio)
    (reset! background-music audio))))
 
 ;; --- Utility ---
 (defn rand-range [min max] (+ min (* (rand) (- max min))))
-
-(defn draw-stats [ctx w _h]
- (when @stats-visible?
-  (.save ctx) ;; Save current canvas state
-
-  (let [padding 12
-        line-height 24
-        stars   (count (filter #(instance? Star %) @objects))
-        planets (count (filter #(instance? Planet %) @objects))
-        comets  (count (filter #(instance? Comet %) @objects))
-        total   (count @objects)
-        fps     (if (pos? @last-dt) (int (/ 1000 @last-dt)) 0)
-        audio-on? (boolean @background-music)
-        dpr     (.-devicePixelRatio js/window)
-        lines   [(str "OBJECTS: " total)
-                 (str "STARS:   " stars)
-                 (str "PLANETS: " planets)
-                 (str "COMETS:  " comets)
-                 (str "FPS:     " fps)
-                 (str "AUDIO:   " (if audio-on? "ON" "OFF"))
-                 (str "SCALE:   " (js/Math.round (* dpr 100)) "%")]
-        box-width 260
-        box-height (+ 20 (* line-height (count lines)))
-        right-x (- w box-width padding)
-        top-y padding]
-
-   ;; Reset transform
-   (.setTransform ctx 1 0 0 1 0 0)
-
-   ;; Background
-   (set! (.-globalAlpha ctx) 0.9)
-   (set! (.-fillStyle ctx) "rgba(0,0,0,0.8)")
-   (.fillRect ctx right-x top-y box-width box-height)
-
-   ;; Border
-   (set! (.-strokeStyle ctx) "#00ff66")
-   (set! (.-lineWidth ctx) 2)
-   (.strokeRect ctx right-x top-y box-width box-height)
-
-   ;; Scanlines
-   (set! (.-fillStyle ctx) "rgba(0,255,100,0.05)")
-   (doseq [i (range top-y (+ top-y box-height) 4)]
-    (.fillRect ctx right-x i box-width 1))
-
-   ;; Text style
-   (set! (.-font ctx) "bold 18px monospace")
-   (set! (.-fillStyle ctx) "#00ff66")
-   (set! (.-shadowColor ctx) "#00ff66")
-   (set! (.-shadowBlur ctx) 8)
-   (set! (.-globalAlpha ctx) 1)
-
-   ;; Text lines
-   (doseq [[i line] (map-indexed vector lines)]
-    (.fillText ctx (.toUpperCase line)
-               (+ right-x 14)
-               (+ top-y (* line-height (+ i 1))))))
-
-  (.restore ctx))) ;; Restore original canvas state
-
-
 
 
 ;; --- SceneObject Protocol ---
@@ -253,6 +196,66 @@
      (.arc ctx mx my size 0 (* 2 js/Math.PI))
      (.fill ctx))))))
 
+
+
+
+(defn draw-stats [ctx w _h]
+ (when @stats-visible?
+  (.save ctx) ;; Save current canvas state
+
+  (let [padding 12
+        line-height 24
+        stars   (count (filter #(instance? Star %) @objects))
+        planets (count (filter #(instance? Planet %) @objects))
+        comets  (count (filter #(instance? Comet %) @objects))
+        total   (count @objects)
+        fps     (if (pos? @last-dt) (int (/ 1000 @last-dt)) 0)
+        audio-on? (boolean @background-music)
+        dpr     (.-devicePixelRatio js/window)
+        lines   [(str "OBJECTS: " total)
+                 (str "STARS:   " stars)
+                 (str "PLANETS: " planets)
+                 (str "COMETS:  " comets)
+                 (str "FPS:     " fps)
+                 (str "AUDIO:   " (if audio-on? "ON" "OFF"))
+                 (str "SCALE:   " (js/Math.round (* dpr 100)) "%")]
+        box-width 260
+        box-height (+ 20 (* line-height (count lines)))
+        right-x (- w box-width padding)
+        top-y padding]
+
+   ;; Reset transform
+   (.setTransform ctx 1 0 0 1 0 0)
+
+   ;; Background
+   (set! (.-globalAlpha ctx) 0.9)
+   (set! (.-fillStyle ctx) "rgba(0,0,0,0.8)")
+   (.fillRect ctx right-x top-y box-width box-height)
+
+   ;; Border
+   (set! (.-strokeStyle ctx) "#00ff66")
+   (set! (.-lineWidth ctx) 2)
+   (.strokeRect ctx right-x top-y box-width box-height)
+
+   ;; Scanlines
+   (set! (.-fillStyle ctx) "rgba(0,255,100,0.05)")
+   (doseq [i (range top-y (+ top-y box-height) 4)]
+    (.fillRect ctx right-x i box-width 1))
+
+   ;; Text style
+   (set! (.-font ctx) "bold 18px monospace")
+   (set! (.-fillStyle ctx) "#00ff66")
+   (set! (.-shadowColor ctx) "#00ff66")
+   (set! (.-shadowBlur ctx) 8)
+   (set! (.-globalAlpha ctx) 1)
+
+   ;; Text lines
+   (doseq [[i line] (map-indexed vector lines)]
+    (.fillText ctx (.toUpperCase line)
+               (+ right-x 14)
+               (+ top-y (* line-height (+ i 1))))))
+
+  (.restore ctx))) ;; Restore original canvas state
 
 
 
