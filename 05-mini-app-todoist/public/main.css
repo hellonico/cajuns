@@ -1,144 +1,138 @@
-/* Base Styles */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.6;
-  color: #333;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
+    font-family: 'Open Sans', 'Comfortaa', sans-serif;
 }
-
-/* Token Form */
-.token-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  max-width: 500px;
+#app {
+  font-family: 'Open Sans', 'Comfortaa', sans-serif;
+  max-width: 36rem;
   margin: 2rem auto;
+  padding: 0 1rem;
 }
 
-.token-form h2 {
-  margin-top: 0;
-  color: #444;
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.token-form input {
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.token-form button {
-  background: #4a6fa5;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.2s;
-}
-
-.token-form button:hover {
-  background: #3a5a80;
-}
-
-/* Filter Panel */
+/* Filter panel */
 .filter-panel {
   display: flex;
-  gap: 10px;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
-
 .filter-panel input,
-.filter-panel select {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  flex: 1;
-  min-width: 150px;
-}
-
+.filter-panel select,
 .filter-panel button {
-  background: #5cb85c;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 0.875rem; /* 14px */
+}
+.filter-panel input {
+  flex: 1;
+}
+.filter-panel button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: background 0.2s;
 }
 
-.filter-panel button:hover {
-  background: #4cae4c;
-}
-
-/* Task List */
+/* Task list */
 .task-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  border-top: 1px solid #eaeaea;
 }
-
 .task-item {
-  background: white;
-  padding: 1rem;
-  margin-bottom: 0.75rem;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   display: flex;
   align-items: flex-start;
-  transition: transform 0.1s, box-shadow 0.1s;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eaeaea;
+  cursor: pointer;
 }
-
 .task-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  background: #f9f9f9;
 }
-
-.task-indicator {
-  color: #4a6fa5;
-  font-size: 1.5rem;
+.task-item .arrow {
   margin-right: 0.75rem;
-  line-height: 1.2;
+  font-size: 0.75rem; /* 12px */
+  color: #4caf50;
 }
-
 .task-content {
   flex: 1;
 }
-
-.task-title {
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-  color: #222;
+.task-content .title {
+  font-size: 0.6rem; /* 12px */
+  margin-bottom: 0.2rem;
 }
-
-.task-meta {
-  font-size: 0.8rem;
+.task-content .meta {
+  font-size: 0.6rem; /* 11px */
   color: #666;
-  margin-bottom: 0.25rem;
 }
-
-.task-meta span {
-  margin-right: 0.5rem;
-}
-
-.task-tags {
-  font-size: 0.75rem;
-  color: #4a6fa5;
-  background: #f0f4f9;
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+.task-content .tags {
+  font-size: 0.6875rem; /* 11px */
+  color: #777;
   margin-top: 0.25rem;
+}
+/* Add this to your CSS */
+.task-item .icon {
+  padding-right: 0.5rem; /* adds 8px of space to the right of the icon */
+}
+
+
+        /* Add to your CSS */
+.label-pill {
+  display: inline-block;
+  background-color: #E0F2FE;    /* light sky blue */
+  color: #0369A1;               /* deep sky blue */
+  border-radius: 9999px;        /* fully rounded */
+  padding: 0.125rem 0.5rem;     /* 2px top/bottom, 8px left/right */
+  font-size: 0.625rem;          /* 10px */
+  cursor: pointer;
+  margin-right: 0.25rem;        /* spacing between pills */
+  user-select: none;
+}
+
+
+
+/* Global form controls */
+input,
+select,
+button {
+  font-size: 0.875rem;    /* 14px */
+  padding: 0.5rem 0.75rem; /* 8px top/bottom, 12px left/right */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Headings in forms */
+h2 {
+  font-size: 1.25rem; /* 20px */
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+/* Buttons */
+button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+button:hover {
+  background-color: #449d48;
+}
+
+/* Container spacing */
+.token-form,
+.filter-panel {
+  max-width: 36rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+.token-form input {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+.token-form button {
+  display: block;
+  width: 100%;
 }

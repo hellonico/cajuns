@@ -241,4 +241,4 @@
     (fetch-labels!)
     (fetch-tasks!)))
 
-(.addEventListener js/document "DOMContentLoaded" init)
+;(.addEventListener js/document "DOMContentLoaded" init)

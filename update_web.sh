@@ -1,21 +1,31 @@
 #!/bin/bash
 
+# Get optional folder argument
+TARGET_FOLDER="$1"
+
 # Create the WEB directory if it doesn't exist
 mkdir -p WEB
 
-# Loop through all folders starting with a number and dash
+# Loop through all folders like 01-*, 02-* etc.
 for dir in [0-9][0-9]-*/; do
-  echo "Processing $dir..."
+  dir_name="${dir%/}"  # Remove trailing slash
 
-  # Run shadow-cljs inside the folder
-  (cd "$dir" && npx shadow-cljs release app)
+  # If a folder was passed as an argument, skip others
+  if [[ -n "$TARGET_FOLDER" && "$dir_name" != "$TARGET_FOLDER" ]]; then
+    continue
+  fi
 
-  # Prepare the destination folder
-  dest="WEB/${dir%/}"  # Remove trailing slash
+  echo "Processing $dir_name..."
+
+  # Run build command inside the folder
+  (cd "$dir_name" && npx shadow-cljs release app)
+
+  # Prepare the destination
+  dest="WEB/$dir_name"
   mkdir -p "$dest"
 
-  # Copy contents of public folder into the destination (not the folder itself)
-  cp -r "${dir}public/"* "$dest"
+  # Copy contents of public folder, not the folder itself
+  cp -r "$dir_name/public/"* "$dest"
 done
 
-echo "All done!"
+echo "Done."
