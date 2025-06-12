@@ -73,174 +73,88 @@
 (defonce analyser      (atom nil))
 
 (defn stop-audio []
-  (when-let [tone (:low-tone @audio-nodes)]
-    (try (.stop tone) (catch js/Error _)))
   (when-let [nodes @audio-nodes]
-    (when-let [src (:source nodes)]
-      (try (.stop src) (catch js/Error _)))
+    ;; Stop tone oscillator
+    (when-let [tone (:tone nodes)]
+      (try (.stop tone) (catch js/Error _)))
+
+    ;; Stop noise source
+    (when-let [noise (:noise nodes)]
+      (try (.stop noise) (catch js/Error _)))
+
+    ;; Stop LFO if present
+    (when-let [lfo (:tone-lfo nodes)]
+      (try (.stop lfo) (catch js/Error _)))
+
+    ;; Stop any piano oscillators (if using piano path elsewhere)
     (when-let [oscs (:oscillators nodes)]
       (doseq [o oscs]
         (try (.stop o) (catch js/Error _))))
+
+    ;; Disconnect everything cleanly
+    (doseq [k (keys nodes)]
+      (when-let [node (get nodes k)]
+        (try (.disconnect node) (catch js/Error _))))
+
+    ;; Reset all nodes
     (reset! audio-nodes nil)
     (reset! analyser nil)))
 
+
 (defn init-audio []
   (stop-audio)
-  (let [{:keys [noise-type mood]} @app-state
-        {:keys [filter-cutoff base-gain]} (get moods mood)]
-    (if (= noise-type :white)
-      ;; --- Enhanced White Noise Engine ---
-      (let [sr      (.-sampleRate audio-context)
-            dur     2
-            buf     (.createBuffer audio-context 1 (* sr dur) sr)
-            data    (.getChannelData buf 0)
-            src     (.createBufferSource audio-context)
-            gain    (.createGain audio-context)
-            an      (.createAnalyser audio-context)
-            ;; multiple filters
-            filt1   (.createBiquadFilter audio-context)
-            filt2   (.createBiquadFilter audio-context)
-            filt3   (.createBiquadFilter audio-context)
-            ;; LFO
-            lfo     (.createOscillator audio-context)
-            lfoGain (.createGain audio-context)]
+  (let [{:keys [filter-cutoff base-gain color]} (get moods (:mood @app-state))
+        tone-freq filter-cutoff
+        tone     (.createOscillator audio-context)
+        toneGain (.createGain audio-context)
+        noiseBuf (.createBuffer audio-context 1 (* (.-sampleRate audio-context) 2) (.-sampleRate audio-context))
+        noiseData (.getChannelData noiseBuf 0)
+        noiseSrc (.createBufferSource audio-context)
+        noiseFilt (.createBiquadFilter audio-context)
+        noiseGain (.createGain audio-context)
+        an       (.createAnalyser audio-context)]
 
-        ;; Fill buffer with white noise
-        (dotimes [i (.-length data)]
-          (aset data i (- (rand 2) 1)))
+    ;; fill noise
+    (dotimes [i (.-length noiseData)]
+      (aset noiseData i (- (rand 2) 1)))
 
-        ;; Setup base source
-        (set! (.-buffer src) buf)
-        (set! (.-loop src) true)
+    ;; tone oscillator
+    (set! (.-type tone) "sine")
+    (set! (.-frequency tone) tone-freq)
+    (set! (.-value (.-gain toneGain)) 0.0000001)
 
-        ;; Filters vary by mood
-        (cond
-          (= mood :calm)
-          (do (set! (.-type filt1) "lowpass")
-              (set! (.-frequency filt1) 800))
+    ;; noise source
+    (set! (.-buffer noiseSrc) noiseBuf)
+    (set! (.-loop noiseSrc) true)
+    (set! (.-type noiseFilt) "lowpass")
+    (set! (.-frequency noiseFilt) (+ tone-freq 200))
+    (set! (.-value (.-gain noiseGain)) (* base-gain 2.5))
 
-          (= mood :bright)
-          (do (set! (.-type filt1) "lowpass")
-              (set! (.-frequency filt1) 1500)
-              (set! (.-Q filt1) 0.8))
+    ;; analyser
+    (set! (.-fftSize an) 256)
 
+    ;; connect graph
+    (.connect tone toneGain)
+    (.connect toneGain an)
+    (.connect noiseSrc noiseFilt)
+    (.connect noiseFilt noiseGain)
+    (.connect noiseGain an)
+    (.connect an (.-destination audio-context))
 
-          (= mood :deep)
-          (do (set! (.-type filt1) "bandpass")
-              (set! (.-frequency filt1) 400))
+    ;; start
+    (.start tone 0)
+    (.start noiseSrc 0)
 
-          (= mood :love)
-          (do (set! (.-type filt1) "bandpass")
-              (set! (.-frequency filt1) 500))
+    ;; save nodes
+    (reset! analyser an)
+    (reset! audio-nodes {:tone tone
+                         :tone-gain toneGain
+                         :noise noiseSrc
+                         :noise-gain noiseGain
+                         :noise-filter noiseFilt
+                         :analyser an})))
 
-          (= mood :deep-sleep)
-          (do (set! (.-type filt1) "lowpass")
-              (set! (.-frequency filt1) 300))
-
-          (= mood :brain)
-          (do (set! (.-type filt1) "bandpass")
-              (set! (.-frequency filt1) 77)))
-
-        ;; Additional textures
-        (set! (.-type filt2) "highpass")
-        (set! (.-frequency filt2) 60)
-
-        (set! (.-type filt3) "lowpass")
-        (set! (.-frequency filt3) 2000)
-
-        ;; Gain setup
-        (set! (.-gain gain) base-gain)
-
-        (let [tone     (.createOscillator audio-context)
-              toneGain (.createGain audio-context)
-              ]
-          (set! (.-type tone) "triangle")
-          (set! (.-frequency tone)
-                (case mood
-                  :calm 40
-                  :deep 30
-                  :bright 50
-                  :love 38
-                  :deep-sleep 28
-                  :brain 33
-                  35))
-          (set! (.-value (.-gain toneGain)) 0.02)
-          (.connect toneGain an)
-          (.start tone)
-          ;; store in audio-nodes
-          (swap! audio-nodes assoc :low-tone tone :low-tone-gain toneGain))
-
-        ;; LFO modulates filter1 cutoff for movement
-        (set! (.-type lfo) "sine")
-        (set! (.-frequency lfo)
-              (case mood
-                :calm        0.05
-                :deep        0.03
-                :bright      0.2
-                :love        0.07
-                :deep-sleep  0.01
-                :brain       0.005
-                0.1))
-        (set! (.-value (.-gain lfoGain))
-              (case mood
-                :calm        200
-                :deep        150
-                :bright      500
-                :love        120
-                :deep-sleep  80
-                :brain       50
-                100))
-        (.connect lfo lfoGain)
-        (.connect lfoGain (.-frequency filt1))
-        (.start lfo)
-
-        ;; Analyser
-        (set! (.-fftSize an) 256)
-
-        ;; Connect chain: src -> filt1 -> filt2 -> filt3 -> gain -> analyser -> dest
-        (.connect src filt1)
-        (.connect filt1 filt2)
-        (.connect filt2 filt3)
-        (.connect filt3 gain)
-        (.connect gain an)
-        (.connect an (.-destination audio-context))
-
-        ;; Start sound
-        (.start src 0)
-
-        ;; Save nodes
-        (reset! analyser an)
-        (reset! audio-nodes {:source src
-                             :filter1 filt1
-                             :filter2 filt2
-                             :filter3 filt3
-                             :gain gain
-                             :lfo lfo
-                             :lfo-gain lfoGain}))
-
-      ;; --- Piano tone path remains unchanged ---
-      (let [freqs (if (= mood :brain) [77] [261.63 329.63 392.00])
-            oscs  (mapv (fn [f]
-                          (let [o (.createOscillator audio-context)]
-                            (set! (.-type o) "sine")
-                            (set! (.-frequency o) f)
-                            o)) freqs)
-            filt  (.createBiquadFilter audio-context)
-            gain  (.createGain audio-context)
-            an    (.createAnalyser audio-context)]
-        (set! (.-type filt) "lowpass")
-        (set! (.-value (.-frequency filt)) filter-cutoff)
-        (set! (.-value (.-gain gain)) base-gain)
-        (set! (.-fftSize an) 256)
-        (doseq [o oscs] (.connect o filt))
-        (.connect filt gain)
-        (.connect gain an)
-        (.connect an (.-destination audio-context))
-        (doseq [o oscs] (.start o 0))
-        (reset! analyser an)
-        (reset! audio-nodes {:oscillators oscs :filter filt :gain gain})))))
-
-(defn apply-mood-and-noise []
+  (defn apply-mood-and-noise []
   (.resume audio-context)
   (init-audio))
 
@@ -349,11 +263,14 @@
                       (reset! last-ts ts)
                       (update-wave-data)
                       (when-let [{:keys [gain]} @audio-nodes]
-                        (let [amp (nth @wave-data (quot (count @wave-data) 2))]
-                          (set! (.-value gain)
-                                (* (max 0 amp)
-                                   (:base-gain (get moods (:mood @app-state)))
-                                   1.5))))
+                        (let [mood-key (:mood @app-state)
+                              mood-def (get moods mood-key)
+                              base-gain (or (:base-gain mood-def) 1)
+                              amp (nth @wave-data (quot (count @wave-data) 2))
+                              gain (-> @audio-nodes :gain)]
+                          (when (and gain (number? base-gain))
+                            (set! (.-value gain)
+                                  (* (max 0 amp) base-gain 1.5)))))
                       (draw-wave ctx (:color (get moods (:mood @app-state)))))
                     (let [next-id (js/requestAnimationFrame animate-frame)]
                       (swap! app-state assoc :anim-frame-id next-id)))]
