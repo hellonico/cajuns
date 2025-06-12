@@ -1,0 +1,23 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src"]
+
+ :dependencies
+ [
+  ;[reagent/reagent "1.3.0"]
+  ;[org.clojure/core.async "1.5.648"]
+  ]
+
+ :dev-http     {8001 "public"}
+
+ ;:install-deps true
+ ;:npm-deps
+ ;{"@tensorflow/tfjs"                 "^4.8.0"
+ ; "@tensorflow-models/face-detection" "^1.0.3"}
+
+ :builds
+  {:app {:target :browser
+         :output-dir "public/js"
+         :asset-path "/js"
+         :modules {:main {:entries [death-star.core] :init-fn death-star.core/init}}
+         :devtools {:after-load death-star.core/init}}}}
